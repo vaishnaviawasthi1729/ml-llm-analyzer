@@ -1,0 +1,11 @@
+Age,Gender,Income,Owns_Car,Purchased,Predictions
+25,Male,30000,No,No,0
+32,Female,45000,Yes,Yes,1
+47,Female,54000,Yes,Yes,0
+51,Male,50000,No,No,0
+23,Male,27000,No,No,0
+35,Female,40000,Yes,Yes,1
+29,Male,39000,Yes,Yes,1
+40,Female,60000,No,Yes,1
+45,Male,52000,Yes,No,0
+37,Male,58000,No,Yes,1

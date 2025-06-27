@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Upload Dataset</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container">
+    <a class="navbar-brand" href="/">ML CRUD Dataset Analyzer</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="/upload">Upload</a></li>
+        <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Main Container -->
+<div class="container py-5">
+
+  <!-- Upload New Dataset -->
+  <div class="row justify-content-center mb-5">
+    <div class="col-lg-8">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h2 class="card-title text-center mb-4">Upload New Dataset</h2>
+          <form method="POST" action="/upload" enctype="multipart/form-data" class="mb-4">
+            <div class="mb-3">
+              <label for="dataset" class="form-label fw-bold">Select CSV File:</label>
+              <input type="file" name="dataset" accept=".csv" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-success w-100">Upload and Analyze</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Previously Uploaded -->
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h4 class="card-title text-center mb-3">Or select from previously uploaded files:</h4>
+          <form method="POST">
+            <div class="mb-3">
+              <select name="existing_files" class="form-select">
+                {% for file in existing_files %}
+                  <option value="{{ file }}">{{ file }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <button type="submit" class="btn btn-secondary w-100">Use Selected File</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Back to Home -->
+  <div class="text-center mt-4">
+    <a href="/" class="btn btn-outline-primary">⬅️ Go Home</a>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

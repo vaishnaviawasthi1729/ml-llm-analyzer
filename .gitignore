@@ -1,0 +1,15 @@
+# Environment
+.env
+.env.*
+
+# Python venv
+venv/
+__pycache__/
+
+# Flask + Temp Files
+uploads/
+*.pkl
+llm_response.txt
+
+# Logs
+*.log

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result of Training</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+</head>
+<body class="p-4">
+    <div class="container">
+        <h2 class="mb-4">Model Training Results</h2>
+        {% if error %}
+            <div class="alert alert-warning">{{error}}</div>
+        {% elif results and results|length >0 %}
+
+            {% if show_warning %}
+            <div class="alert alert-danger">
+                ⚠️ Model performance is low. You may try selecting different features or models.
+            </div>
+            {% endif %}
+            <div class="container mt-5">
+                <div class="card shadow p-4">
+                    <h4 class="mb-4  text-center">📋Model Metrics Comparison</h4>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Model</th>
+            {% if results and results[0].metrics is defined %}
+            {% for metric in results[0]['metrics'].keys() %}
+                <th>{{ metric }}</th>
+            {% endfor %}
+            {% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for r in results if 'metrics' in r %}
+            <tr>
+                <td>{{ r.model }}</td>
+                {% for metric in r.metrics.values() %}
+                    <td>{{ metric }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+                    </div>
+                    <div class="alert alert-info mt-4 text-center">
+                        🎯 Based on overall performance, the best model is 
+                        <strong class="text-success">{{ best_model }}</strong> with an average score of 
+                        <strong class="text-primary">{{ best_score }}</strong>.
+                    </div>
+                </div>
+            </div>
+         <h4 class="mt-5">Visualization</h4>
+                {% for r in results if 'metrics' in r %}
+                    <div class="mt-4">
+                        <h5>{{ r.model }}</h5>
+                        {% if r.conf_img and r.conf_img != 'N/A' %}
+                            <img src="{{url_for('static',filename='images/' ~ r.conf_img.split('/')[-1])}}" class="img-fluid mb-3" style="max-width: 400px;">
+                        {% endif %}
+                        {% if r.roc_img and r.roc_img != 'N/A' %}
+                            <img src="{{url_for('static',filename='images/' +r.roc_img.split('/')[-1])}}" class="img-fluid mb-3" style="max-width: 400px;">
+                        {% endif %}
+                        
+                    </div>
+                {% endfor %}
+         
+
+        <a href="{{url_for('download_results')}}" class="btn btn-success mt-3 mb-3">⬇️ Download Results as CSV</a>  
+        {% else %}
+            <p>No results to show. Please select models.</p>
+        {% endif %}
+        <a href="/predict" class="btn btn-primary">🔮 Predict on New Data</a>
+        <a href="/" class="btn btn-primary">Go to Home</a>
+        <a href="/train" class="btn btn-secondary">Train More Models</a>
+    </div>
+</body>
+</html>
