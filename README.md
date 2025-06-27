@@ -72,3 +72,40 @@ OPENROUTER_API_KEY=your_openrouter_key_here
 
 # 5. Run the app
 python app.py
+
+## 🚧 Challenges Faced
+
+### 🔐 1. LLM API Key Handling with OpenRouter
+
+One of the major challenges was integrating **OpenRouter's API** to dynamically suggest the best machine learning model for any uploaded dataset. 
+
+Initially, attempts to use the `BASE_URL` for making requests to non-OpenAI models failed because:
+
+- OpenRouter does **not support direct base URL calls** (`https://openrouter.ai/v1`) for models like `mistral`, `anthropic`, etc.
+- Instead, these models must be accessed by including the **model name and API key in the request headers**, as per OpenRouter’s SDK guidelines.
+
+This required adjusting the request logic to correctly format headers and payloads for compatibility with OpenRouter’s routing.
+
+---
+
+### 🐍 2. Python Version Mismatch During Deployment on Render
+
+Another major roadblock was encountered while deploying the Flask app to **Render**.
+
+By default, Render uses **Python 3.13**, which is **incompatible with many popular ML libraries** such as:
+- `scikit-learn`
+- `shap`
+- `xgboost`
+- `numpy`
+
+This caused multiple build failures with cryptic dependency resolution errors.
+
+🔧 **Solution:**
+- Created a `runtime.txt` file with `python-3.10.13`
+- Added an environment variable: `PYTHON_VERSION=3.10.13` in Render’s settings
+- Redeployed with **"Clear build cache & deploy latest commit"**
+
+This ensured all dependencies installed successfully and the app deployed without errors.
+
+---
+
