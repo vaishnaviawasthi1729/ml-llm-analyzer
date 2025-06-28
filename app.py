@@ -256,27 +256,36 @@ def train_model():
     for model_name in selected:
 
         if model_name == 'Logistic Regression':
+            model=LogisticRegression()
+        elif model_name == 'Decision Tree':
+            model = DecisionTreeClassifier()
+        elif model_name == 'Random Forest':
+            model = RandomForestClassifier()
+        elif model_name == 'Linear Regression':
             if not pd.api.types.is_numeric_dtype(y) or y.nunique() < 10:
                 results.append({"model": model_name, "score": "Error", "metric": "Target not suitable for regression"})
                 continue
             y = pd.to_numeric(y, errors='coerce')
             X = X[~y.isna()]
             y = y[~y.isna()]
-            model = LinearRegression(max_iter=1000)
-        elif model_name == 'Decision Tree':
-            model = DecisionTreeClassifier()
-        elif model_name == 'Random Forest':
-            model = RandomForestClassifier()
-        elif model_name == 'Linear Regression':
             model = LinearRegression()
         elif model_name == 'Support Vector Machine':
             model= SVC(probability=True)
         elif model_name == 'K-Nearest Neighbors':   
-            model= KNeighborsClassifier()
+            n_neighbors = min(5, len(X))  # Choose 5 or fewer based on data
+            if n_neighbors < 1:
+                results.append({"model": model_name, "score": "Error", "metric": "Not enough data for KNN"})
+                continue
+            model = KNeighborsClassifier(n_neighbors=n_neighbors)
         elif model_name == 'Naive Bayes':
             model= GaussianNB()
         elif model_name == 'XGBoost':
             from xgboost import XGBClassifier, XGBRegressor
+            if y.dtype == 'object':
+                if y.nunique() == 2:
+                    y = y.map({label: idx for idx, label in enumerate(y.unique())})
+                else:
+                    y = y.astype('category').cat.codes
             if y.nunique() <= 2:
                 model = XGBClassifier(use_label_encoder=False, eval_metric='logloss')
             else:
@@ -361,7 +370,7 @@ def train_model():
     final_model=None
     for r in results:
         if r['model']==best_model['model']:
-            final_model=r.get('model.obj')
+            final_model=r.get('model_obj')
             break
     if final_model:
         joblib.dump(final_model,'best_model.pkl')
